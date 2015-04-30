@@ -125,8 +125,26 @@ vector<WalkVertex*> WalkGraph::Walk(WalkVertex *start, int maxSteps, unsigned in
   vector<WalkVertex*> walk;
 
   /* CODE GOES HERE */
+  srand(seed);
+  vector<WalkVertex*> pathOfVertices;
+  pathOfVertices.push_back(start);
 
-  return walk;
+  for(int steps = 0; steps < maxSteps; steps++)
+  {
+    if(pathOfVertices.at(steps) -> Status() == CONTINUE)
+    {
+      vector<WalkVertex*> neighbors = Neighbors(pathOfVertices.at(steps));
+      WalkVertex* nextMove = neighbors.at(RandomInt(neighbors.size()));
+      pathOfVertices.push_back(nextMove);
+    }
+
+    else if(pathOfVertices.at(steps) -> Status() == SUCCESS || pathOfVertices.at(steps) -> Status() == FAILURE)
+    {
+      break;
+    }
+  }
+
+  return pathOfVertices;
 }
 
 vector<WalkVertex*> WalkGraph::Neighbors(WalkVertex* v) const {

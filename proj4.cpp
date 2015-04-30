@@ -11,8 +11,18 @@ void PrintFileStatus(string fileName);
 void PrintOptions();
 char TakeSelection();
 bool LoadFile(WalkGraph* walkGraph, string* fileName);
+
+/*
+ * ValidVertex(Graph*, int)
+ * Checks if the vertex ID givenis valid for the loaded file
+ * Pre:  Graph is a valid graph object, and vertexID is an integer within the range of int
+ * Post: Returns wether the vertex is able to be accessed by the graph
+ */
+bool ValidVertex(WalkGraph* walkGraph, int vertexID);
+
 void ListVertices(WalkGraph* walkGraph);
 void ListEdges(WalkGraph* walkGraph);
+void GraphWalk(WalkGraph* walkGraph);
 
 int main()
 {
@@ -54,6 +64,12 @@ int main()
         break;
       }
 
+      case('w'):
+      {
+        GraphWalk(&walkGraph);
+        break;
+      }
+
 			case('q'):
 			{
 				printf("\nGoodbye!\n");
@@ -85,7 +101,7 @@ void PrintOptions()
   printf(" l - load a data file\n");
   printf(" v - list the vertices of the loaded graph\n");
   printf(" e - list the edges of the loaded graph \n");
-  printf(" c - list the connected component of a specific vertex\n");
+  printf(" w - simulate a random walk from a given vertex\n");
   printf(" q - quit\n");
 }
 
@@ -105,7 +121,7 @@ char TakeSelection()
     {
       //If proper selection set properSelection true to break loop
       case('l'): case('v'): case('e'):
-      case('c'): case('q'):
+      case('w'): case('q'):
         properSelection = true;
         break;
 
@@ -135,6 +151,20 @@ bool LoadFile(WalkGraph* walkGraph, string* fileName)
   }
 }
 
+bool ValidVertex(WalkGraph* walkGraph, int vertexID)
+{
+  //Vertex offset (Used so all valid vertices will be in range from 0 to GetNumVertices - 1)
+  int vertexOffset = walkGraph -> GetVertices()[walkGraph -> GetVertices().size() - 1] -> GetID() + 1 - walkGraph -> GetNumVertices();
+
+  //If the vertexID is from 0 to GetNumVertices - 1
+  //AKA A valid vertex
+  if(0 <= vertexID - vertexOffset && vertexID - vertexOffset < walkGraph -> GetNumVertices())
+    return true;
+
+  else
+    return false;
+}
+
 void ListVertices(WalkGraph* walkGraph)
 {
   printf("\nVertices:\n"); //Note: we're printing out vertices
@@ -152,6 +182,54 @@ void ListEdges(WalkGraph* walkGraph)
 
   for(int e = 0; e < walkGraph -> GetEdges().size(); e++)
   {
-    cout << *walkGraph -> GetEdges().at(e) << endl;
+    cout << "  " << *walkGraph -> GetEdges().at(e) << endl;
   }
+}
+
+void GraphWalk(WalkGraph* walkGraph)
+{
+  int vertexID = -1;
+  int steps = -1;
+  int seed = 0;
+  printf("\nSimulate a random walk from a given vertex.\n");
+  while(!ValidVertex(walkGraph, vertexID))
+  {
+    printf("Enter vertex ID: ");
+    cin >> vertexID;
+  }
+
+  while(steps <= 0)
+  {
+    printf("Enter the maximum number of steps in the simulation: ");
+    cin >> steps;
+  }
+
+  printf("Enter an integer seed for the random number generator: ");
+  cin >> seed;
+
+  //Get the vertex list
+  vector<WalkVertex *> vertices = walkGraph -> GetVertices();
+
+  //Pointer to the vertex to test
+  WalkVertex* toTest = NULL;
+
+  //Get the vertex
+  for(int i = 0; i < vertices.size(); i++)
+  {
+    if(vertices.at(i) -> GetID() == vertexID)
+      toTest = vertices.at(i);
+  }
+
+  vector<WalkVertex*> path = walkGraph -> Walk(toTest, steps, seed);
+
+  for(int vertex = 0; vertex < path.size(); vertex++)
+  {
+    cout << "  " << path.at(vertex) -> ToString() << endl;
+  }
+
+  if(path.at(path.size()-1) -> Status() == FAILURE)
+    printf("You were caught!\n");
+  else
+    printf("You made it to safety!  But crime doesn't pay...\n");
+
 }

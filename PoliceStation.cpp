@@ -20,7 +20,12 @@ string PoliceStation::ToString() const
 	return ss.str();
 }
 
+//CHANGE THIS TO INCLUDE PROBABILITY
 walk_status_t PoliceStation::Status() const
 {
-	return FAILURE;
+	double r = (RAND_MAX - rand()) / static_cast<double>(RAND_MAX);
+	if (r < m_probability)
+    	return FAILURE;      // caught by the police
+	else
+		return CONTINUE; // got away
 }
