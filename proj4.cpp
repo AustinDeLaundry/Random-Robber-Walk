@@ -12,6 +12,7 @@ void PrintOptions();
 char TakeSelection();
 bool LoadFile(WalkGraph* walkGraph, string* fileName);
 void ListVertices(WalkGraph* walkGraph);
+void ListEdges(WalkGraph* walkGraph);
 
 int main()
 {
@@ -46,6 +47,12 @@ int main()
 				ListVertices(&walkGraph);
 				break;
 			}
+
+      case('e'):
+      {
+        ListEdges(&walkGraph);
+        break;
+      }
 
 			case('q'):
 			{
@@ -112,10 +119,10 @@ char TakeSelection()
   return selection;
 }
 
-bool LoadFile(WalkGraph* graph, string* fileName)
+bool LoadFile(WalkGraph* walkGraph, string* fileName)
 {
   //If error in loading file
-  if(!graph -> LoadFromFile(*fileName))
+  if(!walkGraph -> LoadFromFile(*fileName))
   {
     //Print error
     printf("Error loading the data file (%s)\n", fileName -> c_str());
@@ -128,14 +135,23 @@ bool LoadFile(WalkGraph* graph, string* fileName)
   }
 }
 
-void ListVertices(WalkGraph* graph)
+void ListVertices(WalkGraph* walkGraph)
 {
   printf("\nVertices:\n"); //Note: we're printing out vertices
 
   //Print out each vertex ID in the graph
-  for(int i = 0; i < graph -> GetVertices().size(); i++)
+  for(int i = 0; i < walkGraph -> GetVertices().size(); i++)
   {
-    cout << graph -> GetVertices().at(i) -> ToString() << endl;
+    cout << walkGraph -> GetVertices().at(i) -> ToString() << endl;
   }
 }
 
+void ListEdges(WalkGraph* walkGraph)
+{
+  printf("\nEdges:\n");
+
+  for(int e = 0; e < walkGraph -> GetEdges().size(); e++)
+  {
+    cout << *walkGraph -> GetEdges().at(e) << endl;
+  }
+}
