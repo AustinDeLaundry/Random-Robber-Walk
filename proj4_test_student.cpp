@@ -32,7 +32,7 @@ TEST(Project4_STUDENT, WalkGraph_Walk) {
   	int counter = 0;
   	while(areEqual && counter < walkOne.size())
   	{
-  	  if(walkOne.at(i) -> GetID() != walkTwo.at(i) -> GetID())
+  	  if(walkOne.at(counter) -> GetID() != walkTwo.at(counter) -> GetID())
   	  {
   	  	areEqual = false;
   	  }
