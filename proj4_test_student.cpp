@@ -20,6 +20,7 @@ TEST(Project4_STUDENT, WalkGraph_Walk) {
 
   vector<WalkVertex*> walkOne;
   vector<WalkVertex*> walkTwo;
+  vector<WalkVertex*> vertices = G.GetVertices();
 
   walkOne = G.Walk(vertices[0], max_steps, seed);
   walkTwo = G.Walk(vertices[0], max_steps, seed);
