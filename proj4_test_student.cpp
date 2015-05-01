@@ -12,9 +12,35 @@
 using namespace std;
 
 TEST(Project4_STUDENT, WalkGraph_Walk) {
+  const unsigned int max_steps = 20;
+  unsigned int seed = 1234;
 
-  /* Test code goes here */
-  
+  WalkGraph G;
+  G.LoadFromFile("data/campus_v5.dat");
+
+  vector<WalkVertex*> walkOne;
+  vector<WalkVertex*> walkTwo;
+
+  walkOne = G.Walk(vertices[0], max_steps, seed);
+  walkTwo = G.Walk(vertices[0], max_steps, seed);
+
+  bool areEqual = true;
+
+  if(walkOne.size() != walkTwo.size())
+  {
+  	int counter = 0;
+  	while(areEqual && counter < walkOne.size())
+  	{
+  	  if(walkOne.at(i) -> GetID() != walkTwo.at(i) -> GetID())
+  	  {
+  	  	areEqual = false;
+  	  }
+
+  	  counter++;
+  	}
+  }
+
+  EXPECT_EQ(true, areEqual);
 }
 
 int main(int argc, char **argv) {
